@@ -1,0 +1,16 @@
+/* ==========================================================================
+   MedGuardian Master CSS Index - Pure Vanilla CSS Design System
+   ========================================================================== */
+
+@import './variables.css';
+@import './global.css';
+@import './layout.css';
+@import './components.css';
+@import './auth.css';
+@import './dashboard.css';
+@import './monitoring.css';
+@import './patient.css';
+@import './emergency.css';
+@import './history.css';
+@import './analytics.css';
+@import './responsive.css';

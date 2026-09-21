@@ -1,0 +1,86 @@
+/* ==========================================================================
+   MedGuardian Design System - CSS Variables & Design Tokens
+   Colors, Typography, Spacing, Shadows, Radius, Status Colors
+   ========================================================================== */
+
+:root {
+  /* Brand Clinical Palette */
+  --primary-blue: #2F6BFF;
+  --primary-blue-hover: #2458DC;
+  --primary-dark: #1D4ED8;
+  --primary-light: #EEF4FF;
+  --primary-glow: rgba(47, 107, 255, 0.25);
+
+  /* Secondary & Vital Accents */
+  --vital-teal: #0EA5A4;
+  --vital-teal-light: #E6F8F8;
+  --vital-glow: rgba(14, 165, 164, 0.2);
+
+  /* Medical Status Palette (Mandatory MedGuardian Standard) */
+  --status-normal: #12B76A;
+  --status-normal-bg: #ECFDF3;
+  --status-normal-border: #A6F4C5;
+  --status-normal-glow: rgba(18, 183, 106, 0.25);
+
+  --status-warning: #F79009;
+  --status-warning-bg: #FFFAEB;
+  --status-warning-border: #FEDF89;
+  --status-warning-glow: rgba(247, 144, 9, 0.25);
+
+  --status-critical: #F04438;
+  --status-critical-bg: #FEF3F2;
+  --status-critical-border: #FECDCA;
+  --status-critical-glow: rgba(240, 68, 56, 0.35);
+
+  /* Background & Surfaces */
+  --bg-app: #F6F8FC;
+  --bg-surface: #FFFFFF;
+  --bg-surface-elevated: #FFFFFF;
+  --bg-surface-muted: #F8FAFD;
+  --bg-sidebar: #0B1528;
+  --bg-sidebar-hover: #16233B;
+  --bg-sidebar-active: #1D2E4E;
+
+  /* Typography & Text */
+  --font-display: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --text-primary: #0F172A;
+  --text-secondary: #475467;
+  --text-muted: #64748B;
+  --text-light: #94A3B8;
+  --text-white: #FFFFFF;
+
+  /* Borders & Dividers */
+  --border-subtle: #E2E8F0;
+  --border-card: #E5E9F2;
+  --border-focus: #2F6BFF;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(16, 24, 40, 0.04);
+  --shadow-sm: 0 1px 3px rgba(16, 24, 40, 0.08), 0 1px 2px rgba(16, 24, 40, 0.04);
+  --shadow-md: 0 4px 8px -2px rgba(16, 24, 40, 0.08), 0 2px 4px -2px rgba(16, 24, 40, 0.04);
+  --shadow-lg: 0 12px 16px -4px rgba(16, 24, 40, 0.08), 0 4px 6px -2px rgba(16, 24, 40, 0.03);
+  --shadow-xl: 0 20px 24px -4px rgba(16, 24, 40, 0.08), 0 8px 8px -4px rgba(16, 24, 40, 0.03);
+  --shadow-glow-blue: 0 0 20px rgba(47, 107, 255, 0.3);
+  --shadow-glow-critical: 0 0 24px rgba(240, 68, 56, 0.35);
+
+  /* Border Radii */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  /* Layout dimensions */
+  --sidebar-width: 260px;
+  --sidebar-collapsed-width: 80px;
+  --navbar-height: 72px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}

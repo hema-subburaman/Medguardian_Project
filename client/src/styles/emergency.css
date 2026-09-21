@@ -1,0 +1,99 @@
+/* ==========================================================================
+   MedGuardian Emergency Center
+   ========================================================================== */
+
+.emergency-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 12px;
+}
+
+.emergency-tab-btn {
+  padding: 8px 18px;
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.emergency-tab-btn.active {
+  background-color: var(--primary-blue);
+  color: #FFFFFF;
+  box-shadow: 0 4px 10px rgba(47, 107, 255, 0.25);
+}
+
+.emergency-card-item {
+  background: #FFFFFF;
+  border: 1px solid var(--status-critical-border);
+  border-left: 6px solid var(--status-critical);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.emergency-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.emergency-type-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--status-critical);
+}
+
+.emergency-reason-text {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  background-color: var(--status-critical-bg);
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(240, 68, 56, 0.2);
+}
+
+.emergency-timeline-list {
+  position: relative;
+  padding-left: 24px;
+  margin-top: 14px;
+}
+
+.emergency-timeline-list::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background-color: var(--border-subtle);
+}
+
+.timeline-step {
+  position: relative;
+  margin-bottom: 14px;
+  font-size: 0.82rem;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -24px;
+  top: 4px;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-full);
+  background-color: #FFFFFF;
+  border: 3px solid var(--primary-blue);
+}
