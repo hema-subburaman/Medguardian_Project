@@ -21,9 +21,19 @@ const emergencySchema = new mongoose.Schema({
     accelMagnitude: Number,
     timestamp: { type: Date, default: Date.now }
   },
-  status: { type: String, enum: ['pending', 'acknowledged', 'resolved'], default: 'pending', index: true },
+  status: { type: String, enum: ['pending', 'acknowledged', 'escalated', 'resolved'], default: 'pending', index: true },
   acknowledgedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
   acknowledgedAt: { type: Date, default: null },
+  observations: [{
+    recordedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    nurseName: { type: String, default: 'Attending Nurse' },
+    observation: { type: String, required: true },
+    recordedAt: { type: Date, default: Date.now }
+  }],
+  escalated: { type: Boolean, default: false },
+  escalatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
+  escalatedAt: { type: Date, default: null },
+  escalationNotes: { type: String, default: '' },
   resolvedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
   resolvedAt: { type: Date, default: null },
   resolutionNotes: { type: String, default: '' }

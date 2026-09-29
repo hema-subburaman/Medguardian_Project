@@ -3,19 +3,61 @@ import Card from '../components/ui/Card';
 import Table from '../components/ui/Table';
 import Badge from '../components/ui/Badge';
 import Loader from '../components/ui/Loader';
-import { FiCpu, FiWifi, FiBattery } from 'react-icons/fi';
-import { fetchDevices } from '../services/deviceService';
+import Button from '../components/ui/Button';
+import { FiCpu, FiWifi, FiBattery, FiLink, FiShield } from 'react-icons/fi';
+import { fetchDevices, linkDevice } from '../services/deviceService';
+import { fetchPatients } from '../services/patientService';
+import { useAuth } from '../context/AuthContext';
 
 export default function Devices() {
+  const { isAdmin } = useAuth();
   const [devices, setDevices] = useState([]);
+  const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      const [devs, pts] = await Promise.all([
+        fetchDevices(),
+        fetchPatients()
+      ]);
+      setDevices(devs);
+      setPatients(pts);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetchDevices()
-      .then((res) => setDevices(res))
-      .catch((e) => console.error(e))
-      .finally(() => setLoading(false));
+    loadData();
   }, []);
+
+  const handleLinkDevice = async (deviceId) => {
+    if (!patients || patients.length === 0) {
+      alert('No patients available to assign.');
+      return;
+    }
+
+    const patientOptions = patients.map((p, idx) => `${idx + 1}. ${p.name} (${p.patientId} - Room ${p.room})`).join('\n');
+    const choice = window.prompt(`Select patient number to assign ${deviceId}:\n\n${patientOptions}`);
+    if (choice) {
+      const idx = parseInt(choice, 10) - 1;
+      if (idx >= 0 && idx < patients.length) {
+        try {
+          await linkDevice(deviceId, patients[idx]._id);
+          alert(`Successfully assigned ${deviceId} to ${patients[idx].name}`);
+          loadData();
+        } catch (err) {
+          alert(err.response?.data?.message || 'Failed to link device');
+        }
+      } else {
+        alert('Invalid selection.');
+      }
+    }
+  };
 
   const columns = [
     {
@@ -55,14 +97,51 @@ export default function Devices() {
     }
   ];
 
+  if (isAdmin) {
+    columns.push({
+      key: 'actions',
+      header: 'Admin Assignment',
+      render: (d) => (
+        <Button
+          variant="secondary"
+          size="sm"
+          icon={FiLink}
+          onClick={() => handleLinkDevice(d.deviceId)}
+        >
+          Assign Patient
+        </Button>
+      )
+    });
+  }
+
   return (
     <div>
       <div className="page-header">
         <div className="page-title-group">
-          <h1>ESP32 IoT Devices</h1>
+          <h1>ESP32 IoT Devices & Gateways</h1>
           <p>Active hardware telemetry gateways paired with physiological sensors.</p>
         </div>
       </div>
+
+      {isAdmin && (
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          padding: '12px 18px',
+          background: 'rgba(23, 92, 211, 0.08)',
+          border: '1px solid rgba(23, 92, 211, 0.25)',
+          borderRadius: 'var(--radius-md)',
+          marginBottom: 20,
+          color: 'var(--text-primary)',
+          fontSize: '0.88rem'
+        }}>
+          <FiShield style={{ color: 'var(--primary-blue)', fontSize: '1.2rem', flexShrink: 0 }} />
+          <div>
+            <strong>Administrator Hardware Control:</strong> You have system permissions to manage ESP32 gateways and assign physiological sensors to admitted hospital beds.
+          </div>
+        </div>
+      )}
 
       {loading ? (
         <Loader label="Scanning IoT hardware gateways..." />

@@ -24,23 +24,44 @@ export default function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
 
-            {/* Protected Clinical Workspace */}
+            {/* Protected Workspace */}
             <Route
               path="/"
               element={
                 <ProtectedRoute>
-                  <AppLayout title="Hospital Dashboard" />
+                  <AppLayout title="Hospital Workspace" />
                 </ProtectedRoute>
               }
             >
               <Route index element={<Dashboard />} />
               <Route path="patients" element={<Patients />} />
               <Route path="patients/:id" element={<PatientProfile />} />
-              <Route path="monitoring" element={<Monitoring />} />
+              <Route
+                path="monitoring"
+                element={
+                  <ProtectedRoute roles={['DOCTOR', 'NURSE']}>
+                    <Monitoring />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="emergency" element={<EmergencyCenter />} />
               <Route path="history" element={<PatientHistory />} />
-              <Route path="analytics" element={<Analytics />} />
-              <Route path="devices" element={<Devices />} />
+              <Route
+                path="analytics"
+                element={
+                  <ProtectedRoute roles={['ADMIN', 'DOCTOR']}>
+                    <Analytics />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="devices"
+                element={
+                  <ProtectedRoute roles={['ADMIN', 'DOCTOR']}>
+                    <Devices />
+                  </ProtectedRoute>
+                }
+              />
             </Route>
 
             {/* Catch-all redirect */}

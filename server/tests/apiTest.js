@@ -49,7 +49,7 @@ async function runTests() {
       path: '/api/auth/login',
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }
-    }, { email: 'admin@medguardian.io', password: 'admin123' });
+    }, { email: 'doctor@medguardian.io', password: 'doctor123' });
     console.log('-> Status:', login.status, '| User:', login.data?.data?.name, '| Role:', login.data?.data?.role);
     if (login.status !== 200 || !login.data?.data?.token) throw new Error('Auth login failed');
     const token = login.data.data.token;

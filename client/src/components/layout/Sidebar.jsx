@@ -15,18 +15,47 @@ import { useAuth } from '../../context/AuthContext';
 import { useSocket } from '../../context/SocketContext';
 
 export default function Sidebar({ isOpen, onClose }) {
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin, isDoctor, isNurse } = useAuth();
   const { unresolvedCount } = useSocket();
 
-  const navLinks = [
-    { to: '/', label: 'Dashboard', icon: FiGrid },
-    { to: '/patients', label: 'Patients', icon: FiUsers },
-    { to: '/monitoring', label: 'Live Monitoring', icon: FiActivity },
-    { to: '/emergency', label: 'Emergency Center', icon: FiAlertCircle, badge: unresolvedCount },
-    { to: '/history', label: 'Patient History', icon: FiClock },
-    { to: '/analytics', label: 'Analytics', icon: FiBarChart2 },
-    { to: '/devices', label: 'IoT Devices', icon: FiCpu }
-  ];
+  // Strict role-specific navigation items
+  let navLinks = [];
+
+  if (isAdmin) {
+    navLinks = [
+      { to: '/', label: 'System Dashboard', icon: FiGrid },
+      { to: '/patients', label: 'Patient Directory', icon: FiUsers },
+      { to: '/devices', label: 'IoT Fleet & Gateways', icon: FiCpu },
+      { to: '/emergency', label: 'Emergency Audit', icon: FiAlertCircle, badge: unresolvedCount }
+    ];
+  } else if (isDoctor) {
+    navLinks = [
+      { to: '/', label: 'Hospital Dashboard', icon: FiGrid },
+      { to: '/patients', label: 'Clinical Patients', icon: FiUsers },
+      { to: '/monitoring', label: 'Live Monitoring', icon: FiActivity },
+      { to: '/emergency', label: 'Emergency Center', icon: FiAlertCircle, badge: unresolvedCount },
+      { to: '/history', label: 'Patient History', icon: FiClock },
+      { to: '/analytics', label: 'Ward Analytics', icon: FiBarChart2 }
+    ];
+  } else if (isNurse) {
+    navLinks = [
+      { to: '/', label: 'Ward Dashboard', icon: FiGrid },
+      { to: '/patients', label: 'Assigned Patients', icon: FiUsers },
+      { to: '/monitoring', label: 'Bedside Monitoring', icon: FiActivity },
+      { to: '/emergency', label: 'Emergency Triage', icon: FiAlertCircle, badge: unresolvedCount },
+      { to: '/history', label: 'Patient History', icon: FiClock }
+    ];
+  } else {
+    navLinks = [
+      { to: '/', label: 'Dashboard', icon: FiGrid }
+    ];
+  }
+
+  const workspaceTitle = isAdmin
+    ? 'System Admin Workspace'
+    : isDoctor
+    ? 'Physician Workspace'
+    : 'Nursing Care Workspace';
 
   return (
     <aside className={`sidebar ${isOpen ? 'mobile-open' : ''}`}>
@@ -43,7 +72,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
       {/* Navigation List */}
       <nav className="sidebar-nav">
-        <div className="nav-section-title">Clinical Workspace</div>
+        <div className="nav-section-title">{workspaceTitle}</div>
         {navLinks.map((item) => {
           const Icon = item.icon;
           return (

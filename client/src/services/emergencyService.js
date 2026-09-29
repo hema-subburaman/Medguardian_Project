@@ -11,6 +11,16 @@ export const acknowledgeEmergency = async (id) => {
   return res.data.data;
 };
 
+export const addEmergencyObservation = async (id, observation) => {
+  const res = await api.post(`/emergency/${id}/observation`, { observation });
+  return res.data.data;
+};
+
+export const escalateEmergency = async (id, notes = '') => {
+  const res = await api.patch(`/emergency/${id}/escalate`, { notes });
+  return res.data.data;
+};
+
 export const resolveEmergency = async (id, notes = '') => {
   const res = await api.patch(`/emergency/${id}/resolve`, { notes });
   return res.data.data;

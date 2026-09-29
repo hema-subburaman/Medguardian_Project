@@ -20,8 +20,10 @@ import ExplainableAICard from '../components/monitoring/ExplainableAICard';
 import PatientModal from '../components/patient/PatientModal';
 import { fetchPatientById, updatePatient } from '../services/patientService';
 import { getStaffList } from '../services/authService';
+import { useAuth } from '../context/AuthContext';
 
 export default function PatientProfile() {
+  const { isDoctor } = useAuth();
   const { id } = useParams();
   const navigate = useNavigate();
   const [patient, setPatient] = useState(null);
@@ -80,9 +82,11 @@ export default function PatientProfile() {
         </div>
 
         <div style={{ display: 'flex', gap: 10 }}>
-          <Button variant="secondary" icon={FiEdit2} onClick={() => setEditOpen(true)}>
-            Edit Record
-          </Button>
+          {isDoctor && (
+            <Button variant="secondary" icon={FiEdit2} onClick={() => setEditOpen(true)}>
+              Edit Record
+            </Button>
+          )}
           <Link to={`/history?patientId=${patient._id}`} className="btn btn-primary">
             <FiClock style={{ marginRight: 6 }} /> View Historical Trends
           </Link>

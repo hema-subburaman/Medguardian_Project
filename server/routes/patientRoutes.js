@@ -12,11 +12,14 @@ const router = express.Router();
 
 router.route('/')
   .get(protect, getPatients)
-  .post(protect, authorize('ADMIN', 'DOCTOR', 'NURSE'), createPatient);
+  // Only DOCTOR can create/admit patients with clinical diagnosis
+  .post(protect, authorize('DOCTOR'), createPatient);
 
 router.route('/:id')
   .get(protect, getPatientById)
-  .put(protect, authorize('ADMIN', 'DOCTOR', 'NURSE'), updatePatient)
-  .delete(protect, authorize('ADMIN'), deletePatient);
+  // Only DOCTOR can update medical info & diagnoses (Admin & Nurse forbidden)
+  .put(protect, authorize('DOCTOR'), updatePatient)
+  // Only DOCTOR can discharge/remove clinical patient records (Nurse & Admin forbidden)
+  .delete(protect, authorize('DOCTOR'), deletePatient);
 
 export default router;

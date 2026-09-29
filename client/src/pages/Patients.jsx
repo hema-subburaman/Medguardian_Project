@@ -18,7 +18,7 @@ import {
 } from '../services/patientService';
 
 export default function Patients() {
-  const { isAdmin } = useAuth();
+  const { isAdmin, isDoctor, isNurse } = useAuth();
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -117,24 +117,26 @@ export default function Patients() {
           <Link to={`/patients/${p._id}`} className="btn btn-secondary btn-sm" title="View Patient Profile">
             <FiEye />
           </Link>
-          <button
-            className="btn btn-secondary btn-sm"
-            onClick={() => {
-              setSelectedPatient(p);
-              setModalOpen(true);
-            }}
-            title="Edit Details"
-          >
-            <FiEdit2 />
-          </button>
-          {isAdmin && (
-            <button
-              className="btn btn-danger btn-sm"
-              onClick={() => handleDelete(p._id, p.name)}
-              title="Delete Patient Record"
-            >
-              <FiTrash2 />
-            </button>
+          {isDoctor && (
+            <>
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={() => {
+                  setSelectedPatient(p);
+                  setModalOpen(true);
+                }}
+                title="Edit Details"
+              >
+                <FiEdit2 />
+              </button>
+              <button
+                className="btn btn-danger btn-sm"
+                onClick={() => handleDelete(p._id, p.name)}
+                title="Delete Patient Record"
+              >
+                <FiTrash2 />
+              </button>
+            </>
           )}
         </div>
       )
@@ -148,18 +150,20 @@ export default function Patients() {
           <h1>Patient Management</h1>
           <p>Admit, monitor, and manage clinical records across all hospital wards.</p>
         </div>
-        <div className="page-actions">
-          <Button
-            variant="primary"
-            icon={FiPlus}
-            onClick={() => {
-              setSelectedPatient(null);
-              setModalOpen(true);
-            }}
-          >
-            Admit New Patient
-          </Button>
-        </div>
+        {isDoctor && (
+          <div className="page-actions">
+            <Button
+              variant="primary"
+              icon={FiPlus}
+              onClick={() => {
+                setSelectedPatient(null);
+                setModalOpen(true);
+              }}
+            >
+              Admit New Patient
+            </Button>
+          </div>
+        )}
       </div>
 
       <PatientFilters
