@@ -68,7 +68,7 @@ app.use('/api/simulation', simulationRoutes);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`==================================================`);
   console.log(`  MEDGUARDIAN CLINICAL BACKEND (Node.js + Express)`);
   console.log(`  Server running on http://localhost:${PORT}`);

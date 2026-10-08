@@ -40,17 +40,33 @@ export const ingestTelemetry = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'Missing device identifier (deviceId)' });
     }
 
-    // 1. Locate Patient (either by explicitly passed ID, or linked to device)
-    let patient = null;
-    if (patientId) {
-      patient = await Patient.findOne({ $or: [{ _id: patientId.match(/^[0-9a-fA-F]{24}$/) ? patientId : null }, { patientId }] });
-    }
-    if (!patient) {
-      patient = await Patient.findOne({ deviceId, status: 'admitted' });
-    }
-    if (!patient) {
-      patient = await Patient.findOne({ status: 'admitted' });
-    }
+    // 1. Locate the device first
+const deviceRecord = await Device.findOne({ deviceId }).populate('patientId');
+
+if (!deviceRecord) {
+  return res.status(404).json({
+    success: false,
+    message: `Device ${deviceId} is not registered`
+  });
+}
+
+// 2. Patient must be assigned to this device
+let patient = deviceRecord.patientId;
+
+if (!patient) {
+  return res.status(409).json({
+    success: false,
+    message: `Device ${deviceId} is not assigned to any patient`
+  });
+}
+
+// 3. Make sure the patient is currently admitted/under monitoring
+if (!['admitted', 'critical_care'].includes(patient.status)) {
+  return res.status(409).json({
+    success: false,
+    message: `Patient ${patient.patientId} is not currently under monitoring`
+  });
+}
 
     // 2. Analyze MPU6050 Motion & Fall Detection
     const motion = analyzeMotion({
@@ -93,15 +109,13 @@ export const ingestTelemetry = async (req, res, next) => {
 
     // 5. Update Patient cache & trigger emergencies
     if (patient) {
-      if (hr > 0 && ox > 0) {
-        patient.vitals = {
-          heartRate: Math.round(hr),
-          spo2: Math.round(ox),
-          temperature: parseFloat(tempC.toFixed(1)),
-          bloodPressure: patient.vitals?.bloodPressure || '120/80',
-          lastUpdated: new Date()
-        };
-      }
+      patient.vitals = {
+  heartRate: Math.round(hr),
+  spo2: Math.round(ox),
+  temperature: parseFloat(tempC.toFixed(1)),
+  bloodPressure: patient.vitals?.bloodPressure || '120/80',
+  lastUpdated: new Date()
+};
       patient.riskLevel = aiRisk.riskLevel;
       await patient.save();
 
